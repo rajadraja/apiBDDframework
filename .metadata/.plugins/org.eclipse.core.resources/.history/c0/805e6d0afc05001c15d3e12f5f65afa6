@@ -1,0 +1,65 @@
+package steps;
+
+import io.restassured.response.Response;
+import net.thucydides.core.annotations.Step;
+import io.restassured.RestAssured;
+import io.restassured.path.json.JsonPath;
+
+import java.util.Map;
+
+//import org.hamcrest.Matchers;
+import org.junit.Assert;
+
+public class ApiSteps {
+	
+	private Response response;
+	
+	
+	@Step("Create a endpoint")
+	public String creatRequest(String apiKey, String searchText, String limit) {
+		
+		String endpoint = "search?api_key=" + apiKey + "&limit=" + limit + "&q=" + searchText;
+		System.out.print(endpoint);
+		
+		return endpoint;
+	}
+	
+	@Step("Get response for given endpoint")
+	public void getResponse(String endPoint) {
+		response =  RestAssured.when().get(endPoint);
+//		response.prettyPrint();
+	}
+	
+	//method can be utilized - example for maintenance  
+	@Step("Send post request for given endpoint and get response")
+	public void postRequest() {
+		// body to post request
+	}
+	
+	@Step("Send delete request for given endpoint and get response")
+	public void deleteResponse(String endPoint) {
+		response = RestAssured.when().delete(endPoint);
+//		response.prettyPrint();
+	}
+	
+	@Step("Validate the status code")
+	public void validateStatusCode(int code) {
+		
+		response.then().statusCode(code);
+	}
+
+	@Step("Verify the response values")
+	public void verifyResponseBody(String key,String value) {
+		
+	
+		String res = response.body().asString();
+		
+		System.out.println("keeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy" + key);
+		Map<Object, Object> tag = jsonPathEvaluator.getMap(key);
+		System.out.println("keeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy" + tag);
+		
+		System.out.println("keeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy" + value);
+		Assert.assertTrue(tag.containsValue(value));		
+	}
+
+}

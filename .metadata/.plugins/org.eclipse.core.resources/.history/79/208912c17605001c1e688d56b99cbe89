@@ -1,0 +1,78 @@
+package testcases;
+
+import org.junit.runner.RunWith;
+
+import cucumber.api.java.Before;
+import cucumber.api.java.en.And;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
+import io.restassured.RestAssured;
+import net.serenitybdd.junit.runners.SerenityRunner;
+import net.thucydides.core.annotations.Steps;
+import net.thucydides.junit.annotations.UseTestDataFrom;
+import steps.ApiSteps;
+
+
+@RunWith(SerenityRunner.class)
+@UseTestDataFrom("./src/test/resources/testdata/api_details.csv")
+public class TestClass {
+	
+	
+	private String apiKey;
+	private String searchtext;
+	private String limit;
+	private String tag;
+	private String value;
+	
+	public void setApiKey(String apiKey) {
+		this.apiKey = apiKey;
+	}
+
+	public void setSearchText(String searchtext) {
+		this.searchtext = searchtext;
+	}
+
+	public void setLimit(String limit) {
+		this.limit = limit;
+	}
+	
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
+	
+	public void setValue(String value) {
+		this.value = value;
+	}
+	
+	
+	@Steps
+	ApiSteps apiSteps;
+
+	@Before
+	public static void init() {
+		
+		RestAssured.baseURI="https://api.giphy.com";
+		RestAssured.basePath="v1/gifs/";
+		
+	}
+	
+	public void createRequest() {
+		
+	}
+	
+	@When("^user send a get request")
+	public void getGifDetails(String searchText) {
+		apiSteps.getResponse(searchText);
+	}
+	
+	@Then("^user should get API status code as (.*)$")
+	public void validateStatusCode(int status) {
+		apiSteps.validateStatusCode(status);
+	}
+	
+	@And("^user get response")
+	public void verifyResponse(String key, String text) {
+		apiSteps.verifyResponseBody(text, text);
+	}
+
+}

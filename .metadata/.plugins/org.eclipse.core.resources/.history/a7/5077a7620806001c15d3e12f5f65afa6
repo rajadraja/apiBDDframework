@@ -1,0 +1,80 @@
+package testcases;
+
+import org.junit.runner.RunWith;
+
+import io.cucumber.java.After;
+import io.cucumber.java.Before;
+import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
+import io.restassured.RestAssured;
+import net.serenitybdd.junit.runners.SerenityParameterizedRunner;
+import net.thucydides.core.annotations.Steps;
+import steps.ApiSteps;
+
+@RunWith(SerenityParameterizedRunner.class)
+public class Tests {
+	
+	private String apikey;
+	private String searchtext;
+	private String limit;
+	
+
+	public void setApikey(String apikey) {
+		this.apikey = apikey;
+	}
+
+	public void setSearchtext(String searchtext) {
+		this.searchtext = searchtext;
+	}
+
+	public void setLimit(String limit) {
+		this.limit = limit;
+	}
+
+	@Steps
+	ApiSteps apiMethods;
+	
+	public String endPoint;
+
+	@Before
+	public static void init() {
+		
+		RestAssured.baseURI="https://api.giphy.com";
+		RestAssured.basePath="v1/gifs/";
+		
+	}
+	
+	@After
+	public static void tear() {
+		RestAssured.reset();
+	}
+	
+	@Given("^user search for gif using search text$")
+	public void user_search_for_gif_using_search_text() {
+		System.out.println("------------------------" +apikey);
+		System.out.println("--------------------------------------" +searchtext );
+		System.out.println("--------------------------------" +limit);
+		endPoint = apiMethods.createRequest(apikey, searchtext, limit);
+		System.out.println(endPoint);
+	}
+	
+	@When("^user send a get request$")
+	public void user_send_a_get_request() {
+		apiMethods.getResponse(endPoint);
+	}
+	
+	@Then("^user should get API status code as (.*)$")
+	public void user_should_get_API_status_code_as(int status) {
+		apiMethods.validateStatusCode(status);
+	}
+	
+	@And("^user get response (.*) as (.*)$")
+	public void user_get_response(String key, String text) {
+		apiMethods.verifyResponseBody(key, text);
+		
+		System.out.println(endPoint);
+	}
+
+}

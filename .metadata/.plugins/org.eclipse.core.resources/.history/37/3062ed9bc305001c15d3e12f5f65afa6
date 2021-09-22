@@ -1,0 +1,12 @@
+package testRunner;
+
+import org.junit.runner.RunWith;
+
+import cucumber.api.CucumberOptions;
+import net.serenitybdd.cucumber.CucumberWithSerenity;
+import testcases.Tests;
+
+@RunWith(CucumberWithSerenity.class)
+@CucumberOptions(features="src/test/resources/features",glue="testcases")
+
+public class RunnerClass extends Tests{}

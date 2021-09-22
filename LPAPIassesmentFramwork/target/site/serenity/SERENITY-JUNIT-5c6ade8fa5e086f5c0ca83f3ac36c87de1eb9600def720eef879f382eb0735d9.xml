@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="UTF-8"?><testsuite errors="0" failures="0" name="Get gif details for search text" skipped="0" tests="2" time="4.41" timestamp="2021-08-26 12:53:27"><testcase name="User finds gifs using search text with valid apikey"/><testcase name="User finds gifs using search text with invalid apikey"/></testsuite>
